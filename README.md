@@ -22,3 +22,22 @@ To answer the frequency analysis question, I developed a query to calculate the 
 Given that the question did not specify a particular time frame or definition of frequency, one of the key challenges was determining an appropriate analysis period. To address this, I grouped transactions by customer and month, using the DATE_FORMAT(transaction_date, '%Y-%m') function to normalize the dates into monthly buckets.
 The query first calculates the monthly transaction count for each customer and groups it by user and month. Then, it determines the average number of transactions per month for each customer across all available months. Based on this average, customers are assigned a frequency category using a CASE statement. The final output aggregates the data to show the total number of customers in each category and the average of their average monthly transactions.
 This approach allowed me to provide a structured view of customer engagement through transaction behavior, which can be extremely valuable for segmentation, targeted campaigns, and understanding usage patterns.
+
+**QUESTION 3**
+To identify inactive plans—those with no transactions in the last 365 days—I developed a query that analyzes transaction history across both savings and investment plans. The goal was to detect dormant customer accounts that may require reactivation efforts or targeted engagement strategies.
+
+**Approach:**
+I started by creating a subquery from the savings_savingsaccount table to calculate, for each customer and plan:
+The last transaction date (MAX(transaction_date))
+The number of inactivity days, calculated as the difference between the cutoff date (current date minus 365 days) and the last transaction date.
+This subquery filtered for transactions that occurred on or before 365 days ago, ensuring that only potentially dormant plans were evaluated.
+I then joined this data with the plans_plan table to retrieve plan details and used a CASE statement to classify each plan as either a Savings or Investment type based on the flags is_regular_savings and is_a_fund.
+Finally, the results were ordered by last_transaction_date, making it easier to prioritize the most outdated plans.
+
+**Challenges Faced:**
+One notable challenge was the absence of an “active” status flag in the question requirements. While it referenced inactivity, it did not specify whether only active plans should be considered. To be comprehensive, I focused on transaction behavior as the basis for inactivity, rather than relying on a potentially ambiguous status flag.
+Additionally, I had to ensure that the classification of plans into savings or investment types was handled properly. Since a plan could technically have both flags set, I used a CASE structure to assign a category based on which flag is active, although this could be enhanced further with prioritization logic or dual-tagging if needed.
+This query provides actionable insights into dormant customer plans, which can inform re-engagement campaigns or risk monitoring for customer churn.
+
+**QUESTION 4**
+
