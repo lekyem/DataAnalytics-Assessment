@@ -40,4 +40,24 @@ Additionally, I had to ensure that the classification of plans into savings or i
 This query provides actionable insights into dormant customer plans, which can inform re-engagement campaigns or risk monitoring for customer churn.
 
 **QUESTION 4**
+To estimate Customer Lifetime Value (CLV), I developed a query that combines transaction data and customer tenure to produce an annualized profitability estimate for each user. This metric provides insight into how much revenue a customer is expected to generate over their engagement with the platform and can be valuable for segmentation, retention strategies, and resource allocation.
 
+**Approach:**
+I began by calculating the customer tenure in months using the PERIOD_DIFF function, which measures the difference between the current date and the date_joined field from the users_customuser table.
+Next, in a subquery, I analyzed the savings_savingsaccount table to:
+Count the total number of successful transactions per customer.
+Estimate the average profit per transaction, assuming a fixed profit margin of 0.1% on each confirmed_amount.
+Using these values, I calculated the estimated CLV with the following logic:
+(Total Transactions / Tenure in Months) × 12 × Avg Profit per Transaction
+This formula annualizes the customer’s transaction behavior to estimate their yearly contribution to revenue.
+The query returns:
+User ID and full name
+Tenure in months
+Total number of successful transactions
+Estimated annual CLV (rounded to 2 decimal places)
+The results are sorted by user ID to keep the output organized.
+
+**Challenges Faced:**
+A key challenge in this task was the lack of a predefined profit margin or CLV formula. To proceed, I made a reasonable business assumption of 0.1% profit per confirmed transaction amount. This allowed me to simulate a simple yet practical profit model.
+Another ambiguity was how to define “lifetime”—whether it should be projected across multiple years or calculated annually. I opted for an annualized CLV to standardize comparisons and ensure that newer customers weren't penalized for shorter engagement periods.
+Overall, this approach provides a solid baseline for estimating CLV, which can later be refined with more detailed cost and revenue inputs if available.
