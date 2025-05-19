@@ -1,7 +1,21 @@
 # DataAnalytics-Assessment
 **QUESTION 1**
-To answer the question, I created a query to look for customers who both have a Savings and an Investment plan. I approached this from data analysis and customer value segmentation, with the aim of determining high-value active customers with multiple financial products.
-One difficulty I encountered was that the problem did not specify whether to take into account active plans only or all of them in history. In order to avoid the elimination of valuable data and to keep the in-depth analysis, I decided to consider all of the plans, regardless of their status. This was done to allow for wider business insights, such as cross-sell possibilities and long-term customer interaction.
+To identify customers who have engaged in both regular savings and investment plans, I developed a query that aggregates plan ownership and confirmed deposits at the customer level. The objective was to pinpoint customers based on the types of plans they own and their total confirmed deposit amounts, which is valuable for segmentation and identifying high-value clients.
+
+**Approach:**
+I began by joining the plans_plan and savings_savingsaccount tables to retrieve all plans associated with successful, non-zero transactions. The subquery filters for plans where either is_regular_savings or is_a_fund is marked as true (non-zero), which indicates that the plan qualifies as either a savings or investment plan.
+Within that subquery, I grouped transactions by plan_id and owner_id, and summed the confirmed_amount where transaction_status = 'success', ensuring that only funded plans were considered.
+This result was then joined with the users_customuser table to connect the plan data to individual customers. For each customer, the query returns:
+The count of savings plans (is_regular_savings)
+The count of investment plans (is_a_fund)
+The total confirmed deposit amount
+The customer's full name using CONCAT
+The final output is grouped by customer and sorted in descending order of total_deposits to highlight top contributors.
+
+**Challenges Faced:**
+A key challenge in this task was the lack of clarity on whether the query should focus on active or inactive plans. Since the question did not specify, I chose to include all plans with successful transaction records, regardless of whether they are currently active or closed. This ensured no valuable customer data was overlooked.
+Additionally, care was taken to avoid double-counting in cases where a plan might qualify as both a savings and an investment product. I used SUM aggregation instead of COUNT to maintain data integrity and accurately reflect the customer’s engagement.
+This method provided a comprehensive view of customer participation across both product types and supports further analysis such as customer profiling, loyalty segmentation, and cross-sell opportunity identification.
 
 **QUESTION 2**
 To answer the frequency analysis question, I developed a query to calculate the average number of transactions per customer per month and segment customers based on their transaction activity. The core objective was to categorize customers into High, Medium, or Low frequency users and return the total number of customers in each group along with their average monthly transaction volume.
